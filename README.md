@@ -2,6 +2,10 @@
 
 Observse intersection of a DOM element and viewport
 
+## What is this?
+
+It is not easy to know if specified DOM element is in viewport of current browser screen. This module observes element and fire show/hide event when the element intersects viewport. This implementation uses getBoundingClientRect() to inspect element position, so may not work fine on old browsers.
+
 ## Installation
 
 ```
