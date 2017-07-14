@@ -1,0 +1,149 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.1/vue.min.js"></script>
+    <style>
+      .spacer {
+        width: 100%;
+        height: 500px;
+        border-bottom: 1px solid #aaaaaa;
+      }
+      .console-container {
+        background-color: #ffffff;
+        border: 1px solid;
+        padding: 10px;
+        position: fixed;
+        left: 400px;
+        top: 80;
+      }
+      .console {
+        margin: 5px;
+        padding: 10px;
+        border: 1px dashed;
+      }
+      .target {
+        margin: 50px;
+        padding: 50px;
+        border: 1px dashed;
+        background-color: #eeeeee;
+        font-size: 40px;
+      }
+      #target2 {
+        height: 1200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Scroll variables</h1>
+    <div class="console-container">
+      <div id="console-global" class="console">
+        scrollHeight: {{scrollHeight}}<br/>
+        clientHeight: {{clientHeight}}<br/>
+        scrollTop: {{scrollTop}}<br/>
+        viewportBottom: {{viewportBottom}}<br/>
+        pageYOffset: {{pageYOffset}}<br/>
+      </div>
+      <div id="console-target1" class="console">
+        <b>target1</b><br/>
+        inViewport: <b>{{inViewport}}</b><br/>
+        offsetTop: {{offsetTop}}<br/>
+        BoundingClientRect.top: {{rectTop}}<br/>
+        BoundingClientRect.bottom: {{rectBottom}}<br/>
+      </div>
+      <div id="console-target2" class="console">
+        <b>target2</b><br/>
+        inViewport: <b>{{inViewport}}</b><br/>
+        offsetTop: {{offsetTop}}<br/>
+        BoundingClientRect.top: {{rectTop}}<br/>
+        BoundingClientRect.bottom: {{rectBottom}}<br/>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div id="target1" class="target">
+      target1
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div id="target2" class="target">
+      target2
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+
+    <br/>
+
+    <script>
+      var cglobal = new Vue({
+        el: '#console-global',
+        data: {
+          scrollTop:    null,
+          scrollHeight: null,
+          viewportBottom: null,
+          pageYOffset:  null,
+          clientHeight: null,
+        }
+      });
+      var ctarget1 = new Vue({
+        el: '#console-target1',
+        data: {
+          inViewport: null,
+          offsetTop: null,
+          rectTop: null,
+          rectBottom: null
+        }
+      });
+      var ctarget2 = new Vue({
+        el: '#console-target2',
+        data: {
+          inViewport: null,
+          offsetTop: null,
+          rectTop: null,
+          rectBottom: null
+        }
+      });
+
+      function getViewpointBottom() {
+        return window.innerHeight + 
+          (document.documentElement.scrollTop ||
+           window.pageYOffset);
+      }
+
+      function isVisible(target) {
+        var viewportBottom = getViewpointBottom();
+        var rect = target.getBoundingClientRect();
+        if (viewportBottom > target.offsetTop && rect.bottom > 0) {
+          return true;
+        }
+        if (0 > rect.top && rect.bottom > viewportBottom) {
+          return true;
+        }
+        return false;
+      }
+      function update() {
+        cglobal.scrollTop    = document.documentElement.scrollTop;
+        cglobal.scrollHeight = document.documentElement.scrollHeight;
+        cglobal.pageYOffset  = window.pageYOffset;
+        cglobal.clientHeight = document.documentElement.clientHeight;
+        cglobal.viewportBottom = getViewpointBottom();
+
+        var target1 = document.getElementById('target1');
+        var rect1 = target1.getBoundingClientRect();
+        ctarget1.inViewport = '' + isVisible(target1);
+        ctarget1.offsetTop = parseInt(target1.offsetTop, 10);
+        ctarget1.rectTop = parseInt(rect1.top, 10);
+        ctarget1.rectBottom = parseInt(rect1.bottom, 10);
+
+        var target2 = document.getElementById('target2');
+        var rect2 = target2.getBoundingClientRect();
+        ctarget2.inViewport = '' + isVisible(target2);
+        ctarget2.offsetTop = parseInt(target2.offsetTop, 10);
+        ctarget2.rectTop = parseInt(rect2.top, 10);
+        ctarget2.rectBottom = parseInt(rect2.bottom, 10);
+      }
+      window.addEventListener('scroll', function() {
+        update();
+      });
+    </script>
+  </body>
+</html>
