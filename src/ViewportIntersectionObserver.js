@@ -2,8 +2,11 @@
 
 export default class ViewportIntersectionObserver {
 
-  constructor () {
+  constructor (opt) {
     this.registry = [];
+    this.observed = false;
+    this.ignore_first_observe
+      = !!(opt && opt.ignore_first_observe)
   }
 
   addListener(element, handlers) {
@@ -13,7 +16,7 @@ export default class ViewportIntersectionObserver {
     const entry = {
       element: element,
       handlers: handlers,
-      state: this.isInViewport(element)
+      state: null,
     };
     this.registry.push(entry);
     return entry;
@@ -27,8 +30,31 @@ export default class ViewportIntersectionObserver {
     return !!element['getBoundingClientRect']
   }
 
-  observe() {
+  _updateState() {
+    for (let entry of this.registry) {
+      entry.state = this.isInViewport(entry.element);
+    }
+  }
 
+  observe() {
+    if (!this.observed && this.ignore_first_observe) {
+      this._updateState();
+      this.observed = true;
+      return;
+    }
+    for (let entry of this.registry) {
+      const newState = this.isInViewport(entry.element);
+      if (newState == entry.state) {
+        continue;
+      }
+      if (newState && entry.handlers.show) {
+        entry.handlers.show(entry.element);
+      }
+      if (!newState && entry.handlers.hide) {
+        entry.handlers.hide(entry.element);
+      }
+      entry.state = newState;
+    }
   }
 
   getViewpointBottom() {
