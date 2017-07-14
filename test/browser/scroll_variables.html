@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.1/vue.min.js"></script>
+    <style>
+      .spacer {
+        width: 100%;
+        height: 500px;
+        border-bottom: 1px solid #aaaaaa;
+      }
+      .console-container {
+        background-color: #ffffff;
+        border: 1px solid;
+        padding: 10px;
+        position: fixed;
+        left: 400px;
+        top: 80;
+      }
+      .console {
+        margin: 5px;
+        padding: 10px;
+        border: 1px dashed;
+      }
+      .target {
+        margin: 50px;
+        padding: 50px;
+        border: 1px dashed;
+        background-color: #eeeeee;
+        font-size: 40px;
+      }
+      #target2 {
+        height: 1200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ViewportIntersectionObserver Browser Test</h1>
+    <div class="console-container">
+      <div id="console-target1" class="console">
+        <b>target1</b><br/>
+        inViewport: <b>{{inViewport}}</b><br/>
+      </div>
+      <div id="console-target2" class="console">
+        <b>target2</b><br/>
+        inViewport: <b>{{inViewport}}</b><br/>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div id="target1" class="target">
+      target1
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div id="target2" class="target">
+      target2
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+
+    <br/>
+
+    <script src="bundle.js"></script>
+    <script>
+    </script>
+  </body>
+</html>
