@@ -16,6 +16,7 @@ var ViewportIntersectionObserver = function () {
     this.registry = [];
     this.observed = false;
     this.ignore_first_observe = !!(opt && opt.ignore_first_observe);
+    this.lastCheck = Date.now();
   }
 
   _createClass(ViewportIntersectionObserver, [{
@@ -71,12 +72,23 @@ var ViewportIntersectionObserver = function () {
       }
     }
   }, {
+    key: "shouldUpdateTimeCheck",
+    value: function shouldUpdateTimeCheck(time) {
+      return Date.now() - this.lastCheck > time;
+    }
+  }, {
     key: "observe",
-    value: function observe() {
+    value: function observe(opt) {
       if (!this.observed && this.ignore_first_observe) {
         this._updateState();
         this.observed = true;
         return;
+      }
+      if (opt && opt.throttle) {
+        if (!this.shouldUpdateTimeCheck(opt.throttle)) {
+          return;
+        }
+        this.lastCheck = Date.now();
       }
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
@@ -196,7 +208,7 @@ observer.addListener(target2, {
 observer.observe();
 
 window.addEventListener('scroll', function() {
-  observer.observe();
+  observer.observe({ throttle: 100 });
 });
 
 })();

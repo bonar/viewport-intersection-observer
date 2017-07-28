@@ -43,7 +43,7 @@ observer.addListener(target2, {
 observer.observe();
 
 window.addEventListener('scroll', function() {
-  observer.observe();
+  observer.observe({ throttle: 100 });
 });
 
 })();
