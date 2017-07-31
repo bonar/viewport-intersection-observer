@@ -36,6 +36,9 @@ observer.addListener(target2, {
 });
 observer.observe();
 
+// You can set throttle setting
+observer.observe({ throttle: 10 });
+
 // You need to call observe() to check status of
 // registered elements. It is NOT automatic.
 window.addEventListener('scroll', function() {

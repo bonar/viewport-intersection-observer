@@ -211,7 +211,7 @@ observer.addListener(target2, {
 observer.observe();
 
 window.addEventListener('scroll', function() {
-  observer.observe({ throttle: 100 });
+  observer.observe({ throttle: 10 });
 });
 
 })();
