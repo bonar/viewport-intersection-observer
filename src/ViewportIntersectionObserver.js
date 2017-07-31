@@ -7,6 +7,7 @@ export default class ViewportIntersectionObserver {
     this.observed = false;
     this.ignore_first_observe
       = !!(opt && opt.ignore_first_observe)
+    this.lastObserveTime = null;
   }
 
   addListener(element, handlers) {
@@ -36,11 +37,24 @@ export default class ViewportIntersectionObserver {
     }
   }
 
-  observe() {
+  throttleTimedOut(interval) {
+    return (Date.now() - this.lastObserveTime) > interval;
+  }
+
+  observe(opt) {
     if (!this.observed && this.ignore_first_observe) {
       this._updateState();
       this.observed = true;
       return;
+    }
+    if (opt && opt.throttle) {
+      if (this.lastObserveTime == null) {
+        this.lastObserveTime = Date.now();
+      }
+      if (!this.throttleTimedOut(opt.throttle)) {
+        return;
+      }
+      this.lastObserveTime = Date.now();
     }
     for (let entry of this.registry) {
       const newState = this.isInViewport(entry.element);

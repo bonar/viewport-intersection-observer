@@ -220,6 +220,37 @@ describe("ViewportIntersectionObserver", () => {
       assert.equal(show3fired, true)
     });
 
+    it("throttles calls when throttle passed as param", done => {
+      const throttleMillisec = 100;
+      let show1fired = false;
+
+      observer.isInViewport = (element) => {
+        return true;
+      }
+
+      observer.addListener(
+        createDummyElement('test1'),
+        {
+          show: () => { show1fired = true; }
+        });
+
+      setTimeout(() => {
+        observer.observe({ throttle: throttleMillisec });
+
+        setTimeout(() => {
+          observer.observe({ throttle: throttleMillisec });
+          assert.equal(show1fired, false);
+
+          setTimeout(() => {
+            observer.observe({ throttle: throttleMillisec });
+            assert.equal(show1fired, true);
+            done();
+
+          }, throttleMillisec + 100);
+        }, 50);
+      }, 0);
+    });
+
     it("does not fire event when state not changed", () => {
       var show = 0;
       var hide = 0;

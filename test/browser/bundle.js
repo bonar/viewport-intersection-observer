@@ -16,6 +16,7 @@ var ViewportIntersectionObserver = function () {
     this.registry = [];
     this.observed = false;
     this.ignore_first_observe = !!(opt && opt.ignore_first_observe);
+    this.lastObserveTime = null;
   }
 
   _createClass(ViewportIntersectionObserver, [{
@@ -71,12 +72,26 @@ var ViewportIntersectionObserver = function () {
       }
     }
   }, {
+    key: "throttleTimedOut",
+    value: function throttleTimedOut(interval) {
+      return Date.now() - this.lastObserveTime > interval;
+    }
+  }, {
     key: "observe",
-    value: function observe() {
+    value: function observe(opt) {
       if (!this.observed && this.ignore_first_observe) {
         this._updateState();
         this.observed = true;
         return;
+      }
+      if (opt && opt.throttle) {
+        if (this.lastObserveTime == null) {
+          this.lastObserveTime = Date.now();
+        }
+        if (!this.throttleTimedOut(opt.throttle)) {
+          return;
+        }
+        this.lastObserveTime = Date.now();
       }
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
@@ -196,7 +211,7 @@ observer.addListener(target2, {
 observer.observe();
 
 window.addEventListener('scroll', function() {
-  observer.observe();
+  observer.observe({ throttle: 100 });
 });
 
 })();
