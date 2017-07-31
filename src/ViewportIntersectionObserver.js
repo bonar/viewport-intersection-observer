@@ -54,7 +54,7 @@ export default class ViewportIntersectionObserver {
       if (!this.throttleTimedOut(opt.throttle)) {
         return;
       }
-      this.lastCheck = Date.now();
+      this.lastObserveTime = Date.now();
     }
     for (let entry of this.registry) {
       const newState = this.isInViewport(entry.element);
