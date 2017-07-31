@@ -231,8 +231,7 @@ describe("ViewportIntersectionObserver", () => {
       observer.addListener(
         createDummyElement('test1'),
         {
-          show: () => { show1fired = true; },
-          hide: () => { hide1fired = true; }
+          show: () => { show1fired = true; }
         });
 
       setTimeout(() => {
