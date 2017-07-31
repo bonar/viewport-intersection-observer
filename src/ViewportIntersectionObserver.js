@@ -7,7 +7,7 @@ export default class ViewportIntersectionObserver {
     this.observed = false;
     this.ignore_first_observe
       = !!(opt && opt.ignore_first_observe)
-    this.lastCheck = Date.now();
+    this.lastObserveTime = null;
   }
 
   addListener(element, handlers) {
@@ -37,8 +37,8 @@ export default class ViewportIntersectionObserver {
     }
   }
 
-  shouldUpdateTimeCheck(time) {
-    return (Date.now() - this.lastCheck) > time;
+  throttleTimedOut(interval) {
+    return (Date.now() - this.lastObserveTime) > interval;
   }
 
   observe(opt) {
@@ -48,7 +48,10 @@ export default class ViewportIntersectionObserver {
       return;
     }
     if (opt && opt.throttle) {
-      if (!this.shouldUpdateTimeCheck(opt.throttle)) {
+      if (this.lastObserveTime == null) {
+        this.lastObserveTime = Date.now();
+      }
+      if (!this.throttleTimedOut(opt.throttle)) {
         return;
       }
       this.lastCheck = Date.now();
