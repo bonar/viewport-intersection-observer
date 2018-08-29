@@ -1,6 +1,6 @@
 {
   "name": "viewport-intersection-observer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Observse intersection of a DOM element and viewport",
   "main": "index.js",
   "scripts": {

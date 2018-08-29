@@ -28,7 +28,7 @@ export default class ViewportIntersectionObserver {
   }
 
   _isValidElement(element) {
-    return !!element['getBoundingClientRect']
+    return !!(element && element['getBoundingClientRect'])
   }
 
   _updateState() {
